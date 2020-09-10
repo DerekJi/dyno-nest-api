@@ -7,8 +7,8 @@ function setupSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
     .setTitle('LDP API')
     .setDescription('The LDP API description')
-    .setVersion('1.0')
-    .addTag('ldp')
+    .setVersion('v1')
+    // .addTag('ldp')
     .build();
     
   const document = SwaggerModule.createDocument(app, options);

@@ -1,0 +1,1 @@
+aws dynamodb create-table --cli-input-json file://lga-data-portal-table.json --endpoint-url http://localhost:8000 --region ap-southeast-2
