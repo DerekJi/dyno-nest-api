@@ -5,10 +5,10 @@ import { INestApplication } from '@nestjs/common';
 
 function setupSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
-    .setTitle('LDP API')
-    .setDescription('The LDP API description')
+    .setTitle('SimpleApplicationService API')
+    .setDescription('The SimpleApplicationService API description')
     .setVersion('v1')
-    // .addTag('ldp')
+    // .addTag('SAS')
     .build();
     
   const document = SwaggerModule.createDocument(app, options);
