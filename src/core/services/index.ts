@@ -1,0 +1,1 @@
+export { BaseDynamoService } from './base-dynamo/base-dynamo.service';

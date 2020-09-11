@@ -1,12 +1,25 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { LgaController } from './lga/lga.controller';
-import { LgaService } from './lga/lga.service';
+import { ConfigModule } from '@nestjs/config';
+
+import { CoreModule } from '@core/core.module';
+
+import env from '@env';
+import { UserApiController } from './users-api/users-api.controller';
+import { UsersApiService } from './users-api/users-api.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController, LgaController],
-  providers: [AppService, LgaService],
+  imports: [
+    CoreModule,
+    ConfigModule.forRoot({
+      load: [env],
+    }),
+    
+  ],
+  controllers: [
+    UserApiController,
+  ],
+  providers: [
+    UsersApiService,
+  ],
 })
 export class AppModule {}
