@@ -1,7 +1,7 @@
 <h2 align="center">Simple Application Service</h2>
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="90" alt="Nest Logo" /></a>
-  <a href="https://aws.amazon.com/dynamodb" target="blank"><img src="https://apisero.com/wp-content/uploads/2020/03/amazon-dynamo-db.png" width="90" alt="Dynamo Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" height="40" alt="Nest Logo" /></a>
+  <a href="https://aws.amazon.com/dynamodb" target="blank"><img src="https://apisero.com/wp-content/uploads/2020/03/amazon-dynamo-db.png" height="40" alt="Dynamo Logo" /></a>
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@ A generic powerful RESTful <a href="http://nodejs.org" target="blank">Node.js</a
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+With DynamoDB, this framework could provide powerful supports for quite a wide range of business requirements if there are only several entities (no more than 10 normally) in the ER diagram. What you need to do is just simply copy and make very limited changes.
 
 ## Installation
 
