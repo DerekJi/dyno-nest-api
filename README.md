@@ -1,14 +1,12 @@
+<h2 align="center">Simple Application Service</h2>
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="90" alt="Nest Logo" /></a>
+  <a href="https://aws.amazon.com/dynamodb" target="blank"><img src="https://apisero.com/wp-content/uploads/2020/03/amazon-dynamo-db.png" width="90" alt="Dynamo Logo" /></a>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
+<p align="center">
+A generic powerful RESTful <a href="http://nodejs.org" target="blank">Node.js</a> server for simple business requirements, based on <a href="http://nestjs.com/" target="blank">NestJS</a> and <a href="https://aws.amazon.com/dynamodb" target="blank">DynamoDB</a></p>
+    <!-- <p align="center">
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
@@ -20,7 +18,7 @@
 <a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
   <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
   <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
+</p> -->
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
@@ -33,6 +31,10 @@
 ```bash
 $ npm install
 ```
+
+## Setup local DynamoDB
+
+please refer to [`dynamodb/README.md`](dynamodb/README.md)
 
 ## Running the app
 
@@ -47,6 +49,8 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+then launch your browser and navigate to the Swagger UI: http://localhost:3000/api 
+
 ## Test
 
 ```bash
@@ -60,16 +64,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Derek Ji](https://derekji.github.io)
 
-## License
-
-  Nest is [MIT licensed](LICENSE).
