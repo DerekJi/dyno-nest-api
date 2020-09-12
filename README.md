@@ -24,7 +24,7 @@ A generic powerful RESTful <a href="http://nodejs.org" target="blank">Node.js</a
 
 ## Description
 
-With DynamoDB, this framework could provide powerful supports for quite a wide range of business requirements if there are only several entities (no more than 10 normally) in the ER diagram. What you need to do is just simply copy and make very limited changes.
+With DynamoDB, this framework could provide powerful supports for quite a wide range of business requirements if there are only several entities (no more than 3 normally) in the ER diagram. What you need to do is just simply copy and make very limited changes.
 
 ## Installation
 
