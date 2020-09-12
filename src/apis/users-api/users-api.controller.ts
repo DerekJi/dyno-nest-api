@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { BaseDynamoModel } from '@core/models';
 import { UsersApiService } from './users-api.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateUserDto, UserDto } from './models/user.dto';
+import { parseDyanmoModle } from '../../core/utils/base-model-converter.utils';
 
 const controllerName = 'Users';
 
@@ -25,11 +25,12 @@ export class UserApiController {
   }
   
   @Post()
-  async create(@Body() model: UserDto): Promise<any> {
+  async create(@Body() dto: UserDto): Promise<any> {
     // const result = await this.apiService.createAsync(model);
     // return result;
+    const model = parseDyanmoModle(dto);
 
-    return {};
+    return model;
   }
 
   @Patch()
