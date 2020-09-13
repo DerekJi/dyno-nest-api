@@ -13,16 +13,13 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   
   /**
    * 
-   * @param key pk string
+   * @param pk pk string
    * @param expand 
    */
-  public async findByKeyAsync(key: string): Promise<T | InternalServerErrorException | NotFoundException> {
+  public async findByKeyAsync(sk: string, pk: string): Promise<T | InternalServerErrorException | NotFoundException> {
     const params = {
       TableName: this.DbConfig?.table,
-      Key:{
-          pk: key,
-          sk: this.serviceSortKey,
-      }
+      Key:{ pk, sk }
     };
 
     let result;
@@ -44,14 +41,16 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
    * 
    * @param options extra optional conditions
    */
-  public async findAllAsync(options?: IFindOptions): Promise<T[] | InternalServerErrorException | NotFoundException> {
+  public async findAllAsync(sk: string, options?: IFindOptions): Promise<T[] | InternalServerErrorException | NotFoundException> {
     const params = {
       TableName: this.DbConfig?.table,
       IndexName: this.DbConfig?.gsi_1,
       KeyConditionExpression: "#sk = :sk",
       ExpressionAttributeNames: { "#sk": "sk" },
-      ExpressionAttributeValues: { ":sk": this.serviceSortKey },
+      ExpressionAttributeValues: { ":sk": sk },
     };
+
+    console.log(params);
 
     let result;
     try {
@@ -77,11 +76,11 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
    * 
    * @param model the item to be created
    */
-  public async createAsync(model: T): Promise<T | InternalServerErrorException | NotFoundException> {
+  public async createAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toUTCString();
 
     model.pk = Guid.create().toString();
-    model.sk = this.serviceSortKey;
+    model.sk = sk;
     model.createdOn = model.createdOn || now;
 
     const params = {
@@ -106,7 +105,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
    * 
    * @param model the item to be updated
    */
-  public async updateAsync(model: T): Promise<T | InternalServerErrorException | NotFoundException> {
+  public async updateAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toISOString();
     model.modifiedOn = model.modifiedOn || now;
 
@@ -147,7 +146,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   
   protected abstract applyExpandParameters?(items: Array<T>, expands?: Array<string>);
   protected abstract get db(): DynamoDB.DocumentClient;
-  protected abstract serviceSortKey = '';
+  // protected abstract serviceSortKey = '';
 
   constructor(
     protected configService: ConfigService,

@@ -1,6 +1,4 @@
 import { BaseDtoModel } from "@core/models";
-import { UserDynamoModel } from "../../apis/users-api/models/user-dynamo-model";
-import { UserDto } from "../../apis/users-api/models/user.dto";
 
 export function parseDyanmoModle<T extends BaseDtoModel>(dto: T): any {
   if (!dto) { return null; }
