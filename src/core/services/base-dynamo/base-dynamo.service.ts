@@ -50,8 +50,6 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
       ExpressionAttributeValues: { ":sk": sk },
     };
 
-    console.log(params);
-
     let result;
     try {
       const promise = await this.db.query(params).promise();
@@ -79,8 +77,9 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   public async createAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toUTCString();
 
-    model.pk = Guid.create().toString();
+    model.pk = sk + '#' + Guid.create().toString();
     model.sk = sk;
+    model.data = model.name;
     model.createdOn = model.createdOn || now;
 
     const params = {
@@ -91,7 +90,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     let result;
     try {
       const promise = await this.db.put(params).promise();
-      result = promise;
+      result = Object.assign({}, model);
     } catch (error) {
       return new InternalServerErrorException(error);
     }

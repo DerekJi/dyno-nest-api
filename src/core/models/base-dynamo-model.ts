@@ -7,6 +7,9 @@ export abstract class BaseDynamoModel {
   @ApiProperty({ required: false, example: '', description: 'The sort key of the record. It should be a combination of the app name and the entity name (in ERD)' })
   sk?: string;
 
+  @ApiProperty({ required: false, example: '', description: 'The name of the record.' })
+  name?: string;
+
   @ApiProperty({ required: false, default: true, example: true, description: 'Indicates if the record is active or not' })
   enabled = 1;
 
