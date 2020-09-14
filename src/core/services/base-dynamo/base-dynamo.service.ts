@@ -75,12 +75,12 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
    * @param model the item to be created
    */
   public async createAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
-    const now = new Date().toUTCString();
+    const now = new Date().toISOString();
 
     model.pk = sk + '#' + Guid.create().toString();
     model.sk = sk;
     model.data = model.name;
-    model.createdOn = model.createdOn || now;
+    model.createdOn = now;
 
     const params = {
       TableName: this.DbConfig?.table,
@@ -89,7 +89,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
 
     let result;
     try {
-      const promise = await this.db.put(params).promise();
+      await this.db.put(params).promise();
       result = Object.assign({}, model);
     } catch (error) {
       return new InternalServerErrorException(error);
