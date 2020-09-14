@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
 
 import { Guid } from "guid-typescript";
-import DynamoDB from 'aws-sdk/clients/dynamodb';
+import DynamoDB, { UpdateItemInput } from 'aws-sdk/clients/dynamodb';
 
 import { BaseDynamoModel, DatabaseConfigEnv, IFindOptions } from '@core/models';
 
@@ -108,14 +108,15 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     const now = new Date().toISOString();
     model.modifiedOn = model.modifiedOn || now;
 
-    const params = {
-      TableName: this.DbConfig?.table,
-      Item: model,
-    };
+    const params = this.buildUpdateItemParams(model);
+
+    if (!params) {
+      return new InternalServerErrorException('Invalid input');
+    }
 
     let result;
     try {
-      const promise = await this.db.put(params).promise();
+      const promise = await this.db.update(params).promise();
       result = promise;
     } catch (error) {
       return new InternalServerErrorException(error);
@@ -124,6 +125,54 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     return result;
   }
 
+  /**
+   * 
+   * @param model 
+   */
+  protected buildUpdateItemParams(model: T): any {
+    if (!model || !model.pk || !model.sk) {
+      return null;
+    }
+
+    const updateExpressions: string[] = [];
+    const attributeNames: any = {};
+    const attributeValues: any = {};
+    for (const [key, value] of Object.entries(model)) {
+      const skipKeys = ['pk', 'sk', 'createdOn', 'createdBy', 'modifiedBy'];
+      if (skipKeys.indexOf(key) < 0) {
+        const updateExpr = `#${key} = :${key}`;
+        updateExpressions.push(updateExpr);
+        attributeNames[`#${key}`] = key;
+
+        let itemValue = value;
+        switch (key) {
+          case 'modifiedOn':
+            itemValue = new Date().toISOString();
+            break;
+          case 'data':
+            itemValue = model.name;
+            break;
+          default:
+            itemValue = value;
+        }
+        attributeValues[`:${key}`] = itemValue;
+      }
+    }
+
+    // Assembly the result params
+    const params = {
+      TableName: this.DbConfig?.table,
+      Key: {
+        pk: model.pk,
+        sk: model.sk,
+      },
+      ReturnValues:"UPDATED_NEW",
+      UpdateExpression: 'set ' + updateExpressions.join(', '),
+      ExpressionAttributeNames: attributeNames,
+      ExpressionAttributeValues: attributeValues,
+    };
+    return params;
+  }
   
 
   /**
