@@ -100,7 +100,6 @@ With the N side entity as the base entity, here are the sample sads.js entities
 | **pk** | **sk** | **Name** |
 | --- | --- | --- |
 | DEPARTMENT#8260eb3a-b4d4-421a-9747-883c24ab57e0 | DEPARTMENT | HR |
- |
 | DEPARTMENT#db5873aa-2b8e-4b79-aec5-4afd21e4d7ec | DEPARTMENT | Sales |
 
 **Employees**
