@@ -26,4 +26,5 @@ export abstract class BaseDynamoModel {
   modifiedBy?: string;
 
   abstract data?: string;
+  [key: string]: any;
 }

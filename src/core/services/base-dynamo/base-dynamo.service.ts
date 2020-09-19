@@ -3,20 +3,20 @@ import { ConfigService } from '@nestjs/config';
 import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
 
 import { Guid } from "guid-typescript";
-import DynamoDB, { UpdateItemInput } from 'aws-sdk/clients/dynamodb';
+import DynamoDB from 'aws-sdk/clients/dynamodb';
 
 import { BaseDynamoModel, DatabaseConfigEnv, IFindOptions } from '@core/models';
+import { IExpandOptions } from '@core/models/expand-options.interface';
 
 @Injectable()
 export abstract class BaseDynamoService<T extends BaseDynamoModel> {
 
-  
   /**
    * 
    * @param pk pk string
    * @param expand 
    */
-  public async findByKeyAsync(sk: string, pk: string): Promise<T | InternalServerErrorException | NotFoundException> {
+  public async findByKeyAsync(sk: string, pk: string, options?: IFindOptions): Promise<T | InternalServerErrorException | NotFoundException> {
     const params = {
       TableName: this.DbConfig?.table,
       Key:{ pk, sk }
@@ -32,6 +32,19 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     
     if (!result) {
       return new NotFoundException('Not Found');
+    }
+
+    if (options) {
+      const resultItems = [ result as T ];
+      result = ([true, false].indexOf(options.enabled) < 0) ? result : resultItems.find((x) => x.enabled === +options.enabled);
+
+      // Expands
+      if (result) {
+        const expands = (options?.expand || '').split(',') || [];
+        if (resultItems.length > 0 && expands.length > 0) {
+          await this.applyExpandParameters(resultItems, expands);
+        }
+      }
     }
     
     return result;
@@ -63,7 +76,14 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     }
     
     if (options) {
-      result = ([true, false].indexOf(options.enabled) < 0) ? result : result.filter((x) => x.Enabled === +options.enabled);
+      result = ([true, false].indexOf(options.enabled) < 0) ? result : result.filter((x) => x.enabled === +options.enabled);
+
+      // Expands
+      const expands = (options?.expand || '').split(',') || [];
+      const items = result as Array<T> || [];
+      if (items.length > 0 && expands.length > 0) {
+        await this.applyExpandParameters(items, expands);
+      }
     }
 
     return result;
@@ -108,7 +128,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     const now = new Date().toISOString();
     model.modifiedOn = model.modifiedOn || now;
 
-    const params = this.buildUpdateItemParams(model);
+    const params = this.buildUpdateItemInput(model);
 
     if (!params) {
       return new InternalServerErrorException('Invalid input');
@@ -127,9 +147,36 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
 
   /**
    * 
+   * @param pk 
+   * @param filterValue 
+   * @param oper 
+   */
+  protected buildExpandQueryInput(pk: string, filterValue: string, oper: string = 'BEGINS_WITH') {
+    const isWord = new RegExp(/\w+/g);    
+    const skConditionExpr = isWord.test(oper) ? `${oper.toLowerCase()}(#sk, :sk)` : `#sk ${oper} :sk`;
+
+    const params = {
+      "TableName": this.DbConfig?.table,
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": `#pk = :pk And ${skConditionExpr}`,
+      "ExpressionAttributeValues": {
+        ":pk":  pk,
+        ":sk": filterValue
+      },
+      "ExpressionAttributeNames": {
+        "#pk": "pk",
+        "#sk": "sk"
+      }
+    };
+    return params;
+  }
+
+  /**
+   * 
    * @param model 
    */
-  protected buildUpdateItemParams(model: T): any {
+  protected buildUpdateItemInput(model: T): any {
     if (!model || !model.pk || !model.sk) {
       return null;
     }
@@ -174,6 +221,41 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     return params;
   }
   
+  /**
+   * 
+   * @param models 
+   * @param requestExpands 
+   */
+  protected async applyExpandParameters(models: Array<BaseDynamoModel>, requestExpands?: Array<string>): Promise<Array<BaseDynamoModel>> {
+    for (const model of models || []) {
+      for (const ec of this.expandCandidates) {
+        if (requestExpands.some(x => x.toLowerCase() === ec.key)) {
+          const expandModel = await this.getExpandModel(model, ec);
+          model[ec.targetProperty] = expandModel;
+        }
+      }
+    }
+
+    return models;
+  }
+
+  /**
+   * 
+   * @param model 
+   * @param options 
+   */
+  protected async getExpandModel(model: BaseDynamoModel, options: IExpandOptions) {   
+    let result;
+    try {
+      const queryInput = this.buildExpandQueryInput(model[options.pkMapFieldName], options.skValue);
+      const promise = await this.db.query(queryInput).promise();
+      result = promise.Items;
+    } catch (error) {
+      return new InternalServerErrorException(error);
+    }
+
+    return result;
+  }
 
   /**
    * 
@@ -186,16 +268,24 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     return options;
   }
 
+  /**
+   * 
+   */
   protected get DbConfig(): DatabaseConfigEnv {
     const dbConfig = this.configService.get<DatabaseConfigEnv>('database');
     return dbConfig;
   }
 
-  
-  protected abstract applyExpandParameters?(items: Array<T>, expands?: Array<string>);
+  protected abstract readonly expandCandidates: IExpandOptions[];
+  /**
+   * 
+   */
   protected abstract get db(): DynamoDB.DocumentClient;
-  // protected abstract serviceSortKey = '';
 
+  /**
+   * 
+   * @param configService 
+   */
   constructor(
     protected configService: ConfigService,
   ) {

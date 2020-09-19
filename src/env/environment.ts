@@ -4,7 +4,7 @@ export default () => ({
     host: process.env.DATABASE_HOST || 'localhost',
     port: parseInt(process.env.DATABASE_PORT, 10) || 8000,
     // table: 'LGADataPortalData',
-    table: 'SimpleApplicationData',
+    table: 'SimpleApplicationDataModel',
     region: 'ap-southeast-2',
     endpoint: 'http://localhost:8000',
     gsi_1: 'gsi_1',

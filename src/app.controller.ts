@@ -1,5 +1,5 @@
-import { BaseDynamoModel } from '@core/models';
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { BaseDynamoModel, IFindOptions } from '@core/models';
+import { Body, Controller, Get, Optional, Param, Patch, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller('app')
@@ -9,14 +9,23 @@ export class AppController {
   }
 
   @Get(':sk/:key')
-  async findByKey(@Param('sk') sk: string, @Param('key') key: string): Promise<any> {
-    const result = await this.apiService.findByKeyAsync(sk, key);
+  async findByKey(
+    @Param('sk') sk: string,
+    @Param('key') key: string,
+    @Query('fields') fields?: string,
+    @Query('expand') expand?: string,
+  ): Promise<any> {
+    const result = await this.apiService.findByKeyAsync(sk, key, { fields: fields.trim(), expand: expand.trim() });
     return result;
   }
 
   @Get(':sk')
-  async findAll(@Param('sk') sk: string): Promise<any> {
-    const result = await this.apiService.findAllAsync(sk);
+  async findAll(
+    @Param('sk') sk: string,
+    @Query('fields') fields?: string,
+    @Query('expand') expand?: string,
+  ): Promise<any> {
+    const result = await this.apiService.findAllAsync(sk, { fields: fields.trim(), expand: expand.trim() });
     return result;
   }
   
