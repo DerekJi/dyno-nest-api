@@ -5,7 +5,10 @@
 </p>
 
 <p align="center">
-A quick PoC powerful RESTful <a href="http://nodejs.org" target="blank">Node.js</a> server for simple business requirements, based on <a href="http://nestjs.com/" target="blank">NestJS</a> and <a href="https://aws.amazon.com/dynamodb" target="blank">DynamoDB</a></p>
+Build your fully functional RESTful server within 20 minutes!
+</p>
+<p align="center">
+based on <a href="http://nestjs.com/" target="blank">NestJS</a> and <a href="https://aws.amazon.com/dynamodb" target="blank">DynamoDB</a></p>
 
 
 # Benefits from sads.js
