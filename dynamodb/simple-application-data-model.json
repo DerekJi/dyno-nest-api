@@ -1,0 +1,52 @@
+{
+  "ModelName": "Simple Application Data Model",
+  "ModelMetadata": {
+    "Author": "Derek Ji",
+    "DateCreated": "Sep 18, 2020, 04:30 PM",
+    "DateLastModified": "Sep 18, 2020, 04:33 PM",
+    "Description": "",
+    "Version": "1.0"
+  },
+  "DataModel": [
+    {
+      "TableName": "SimpleApplicationDataModel",
+      "KeyAttributes": {
+        "PartitionKey": {
+          "AttributeName": "pk",
+         "AttributeType": "S"
+        },
+        "SortKey": {
+          "AttributeName": "sk",
+          "AttributeType": "S"
+        }
+      },
+      "NonKeyAttributes": [
+        {
+          "AttributeName": "data",
+          "AttributeType": "S"
+        }
+      ],
+      "GlobalSecondaryIndexes": [
+        {
+          "IndexName": "gsi_1",
+          "KeyAttributes": {
+            "PartitionKey": {
+              "AttributeName": "sk",
+              "AttributeType": "S"
+            },
+            "SortKey": {
+              "AttributeName": "data",
+              "AttributeType": "S"
+            }
+          },
+          "Projection": {
+            "ProjectionType": "ALL"
+          }
+        }
+      ],
+      "DataAccess": {
+        "MySql": {}
+      }
+    }
+  ]
+}
