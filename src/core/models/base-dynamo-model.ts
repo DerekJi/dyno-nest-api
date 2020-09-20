@@ -11,7 +11,7 @@ export abstract class BaseDynamoModel {
   name?: string;
 
   @ApiProperty({ required: false, default: true, example: true, description: 'Indicates if the record is active or not' })
-  enabled = 1;
+  enabled = true;
 
   // @ApiProperty({ required: false, default: 'the current date', example: new Date().toISOString(), description: 'The date (ISOString) when the record was created' })
   createdOn: string;

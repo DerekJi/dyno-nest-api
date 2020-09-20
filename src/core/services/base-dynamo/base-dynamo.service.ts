@@ -36,7 +36,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
 
     if (options) {
       const resultItems = [ result as T ];
-      result = ([true, false].indexOf(options.enabled) < 0) ? result : resultItems.find((x) => x.enabled === +options.enabled);
+      result = ([true, false].indexOf(options.enabled) < 0) ? result : resultItems.find((x) => x.enabled === options.enabled);
 
       // Expands
       if (result) {
@@ -146,12 +146,57 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   }
 
   /**
+   * Soft delete (set enabled = false)
+   * @param sk sort key, string, which should be the name of the entity
+   * @param pk partition key, string, which should be the key of the record
+   */
+  public async softDeleteAsync(sk: string, pk: string): Promise<T | InternalServerErrorException | NotFoundException> {
+    const model: T = await this.findByKeyAsync(sk, pk) as T;
+    
+    console.log(model);
+    if (model && model.pk === pk) {
+      model.enabled = false;
+      return await this.updateAsync(sk, model);
+    }
+
+    // else
+    throw new InternalServerErrorException(`Cannot find the record with key '${pk}'`);
+  }
+
+  /**
+   * 
+   * @param sk sort key, string, which should be the name of the entity
+   * @param pk partition key, string, which should be the key of the record
+   */
+  public async hardDeleteAsync(sk: string, pk: string) {
+    const params = {
+      TableName: this.DbConfig?.table,
+      Key: {
+        "pk": pk,
+        "sk": sk,
+      },
+      ConditionExpression: "#pk = :pk And #sk = :sk",
+      ExpressionAttributeNames: { "#pk": "pk", "#sk": "sk" },
+      ExpressionAttributeValues: { ":pk": pk, ":sk": sk },
+    };
+
+    let result;
+    try {
+      await this.db.delete(params).promise();
+    } catch (error) {
+      return new InternalServerErrorException(error);
+    }
+
+    return result;
+  }
+
+  /**
    * 
    * @param pk 
    * @param filterValue 
    * @param oper 
    */
-  protected buildExpandQueryInput(pk: string, filterValue: string, oper: string = 'BEGINS_WITH') {
+  protected buildExpandQueryInput(pk: string, filterValue: string, oper = 'BEGINS_WITH') {
     const isWord = new RegExp(/\w+/g);    
     const skConditionExpr = isWord.test(oper) ? `${oper.toLowerCase()}(#sk, :sk)` : `#sk ${oper} :sk`;
 
