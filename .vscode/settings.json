@@ -1,6 +1,9 @@
 {
   "cSpell.words": [
+    "Authorisation",
+    "apikey",
     "dyno",
+    "headerapikey",
     "nestjs",
     "prebuild"
   ]

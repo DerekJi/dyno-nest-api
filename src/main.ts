@@ -12,6 +12,7 @@ function setupSwagger(app: INestApplication) {
     .setTitle('SimpleApplicationService API')
     .setDescription('The SimpleApplicationService API description')
     .setVersion('v1')
+    .addApiKey({type: 'apiKey', name: 'Authorisation', in: 'header'}, 'Authorisation')
     .addOAuth2({
       type: 'oauth2',
       flows: {
@@ -21,7 +22,6 @@ function setupSwagger(app: INestApplication) {
         },
       },
     })
-    // .addTag('SimpleApplicationService')
     .build();
     
   const document = SwaggerModule.createDocument(app, options);
