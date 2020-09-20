@@ -11,7 +11,9 @@
 * Start local dynamodb: run the batch script [`start-local-db.bat`](start-local-db.bat)
 
 ### Step #3. Create Table
-* Run the node script [sad-create-local-dynamodb.js](sad-create-local-dynamodb.js) by `node sad-create-local-dynamodb.js` to create the table of '*SimpleApplicationData*'.
+* On NoSQL Workbench, 'Import data model' from [`simple-application-data-model.json`](simple-application-data-model.json)
+* `Visualize data model`
+* `Commit to DynamoDB`
 
 > References:
 * [Deploying DynamoDB Locally on Your Computer](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
