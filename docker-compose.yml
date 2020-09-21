@@ -18,5 +18,5 @@ services:
     ports:
       - "3000:3000"
     tty: true
-    command: "npm start"
+    command: "npm run start:dev"
   

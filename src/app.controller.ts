@@ -10,6 +10,11 @@ export class AppController {
   constructor(private readonly apiService: AppService) {
   }
 
+  @Get('hello')
+  async hello() {
+    return 'hello ';
+  }
+
   /**
    * GET ONE RECORD
    * @param sk 

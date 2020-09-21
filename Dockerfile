@@ -47,4 +47,4 @@ EXPOSE 3000
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Run the web service on container startup
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start:dev" ]
