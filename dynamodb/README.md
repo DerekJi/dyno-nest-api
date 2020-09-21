@@ -17,8 +17,11 @@ IT IS RECOMMENDED TO USE *THE DOCKER IMAGE* AS IT IS THE EASIEST IN THIS WAY. Bu
 command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "."]
 ```
 
+Here is the updated compose file: [docker-compose.yml](docker-compose.yml)
+
 Then, run the command simply to start the service:
 ```bash
+# Enter the folder `dynamodb`
 $ docker-compose up -d
 ```
 
