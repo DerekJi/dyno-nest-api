@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    ports:
+    - "8000:8000"
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "."]
+
+  app-node:
+    depends_on:
+      - dynamodb-local
+    image: banst/awscli
+    container_name: app-node
+    ports:
+      - "3000:3000"
+    environment:
+      AWS_ACCESS_KEY_ID: 'xqyfaa'
+      AWS_SECRET_ACCESS_KEY: '2mx2pd'
+    command:
+      dynamodb describe-limits --endpoint-url http://dynamodb-local:8000 --region ap-southeast-2
