@@ -4,8 +4,8 @@ import { AppModule } from './app.module';
 import { INestApplication } from '@nestjs/common';
 import * as compression from 'compression';
 
-const tenantId = process.env.TENANT_ID;
-const clientId = process.env.CLIENT_ID;
+// const tenantId = process.env.TENANT_ID;
+// const clientId = process.env.CLIENT_ID;
 
 function setupSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
@@ -13,15 +13,15 @@ function setupSwagger(app: INestApplication) {
     .setDescription('The SimpleApplicationService API description')
     .setVersion('v1')
     .addApiKey({type: 'apiKey', name: 'x-api-key', in: 'header'}, 'x-api-key')
-    .addOAuth2({
-      type: 'oauth2',
-      flows: {
-        implicit: {
-          scopes: { [`api://${clientId}/access_as_user`]: '' },
-          authorizationUrl: `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize`,
-        },
-      },
-    })
+    // .addOAuth2({
+    //   type: 'oauth2',
+    //   flows: {
+    //     implicit: {
+    //       scopes: { [`api://${clientId}/access_as_user`]: '' },
+    //       authorizationUrl: `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize`,
+    //     },
+    //   },
+    // })
     .build();
     
   const document = SwaggerModule.createDocument(app, options);
