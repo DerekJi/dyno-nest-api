@@ -4,7 +4,7 @@ import { ApiSecurity } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
 @Controller('app')
-@ApiSecurity('Authorisation') // NOTE: The string must be consistent to the last parameter of the line addApiKey() in main.ts
+@ApiSecurity('x-api-key') // NOTE: The string must be consistent to the last parameter of the line addApiKey() in main.ts
 export class AppController {
   
   constructor(private readonly apiService: AppService) {
@@ -40,7 +40,7 @@ export class AppController {
     @Query('fields') fields?: string,
     @Query('expand') expand?: string,
   ): Promise<any> {
-    const result = await this.apiService.findAllAsync(sk, { fields: fields.trim(), expand: expand.trim() });
+    const result = await this.apiService.findAllAsync(sk, { fields: fields?.trim(), expand: expand?.trim() });
     return result;
   }
   
