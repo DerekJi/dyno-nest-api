@@ -22,6 +22,8 @@ function setupSwagger(app: INestApplication) {
         },
       },
     })
+    .addTag('LookupKinds')
+    .addTag('LookupValues')
     .build();
     
   const document = SwaggerModule.createDocument(app, options);
