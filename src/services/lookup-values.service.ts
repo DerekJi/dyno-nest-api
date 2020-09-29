@@ -15,7 +15,7 @@ export class LookupValuesService extends AppService {
       key: 'kind'.toLowerCase(),
       pkMapFieldName: 'kind',
       skValue: 'LookupKinds',
-      targetProperty: 'code',
+      targetProperty: 'lookupKind',
     }
   ];
 

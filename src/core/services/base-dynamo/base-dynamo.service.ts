@@ -97,7 +97,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   public async createAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toISOString();
 
-    model.pk = sk + '#' + Guid.create().toString();
+    model.pk = model.pk || (sk + '#' + Guid.create().toString());
     model.sk = sk;
     model.data = model.name;
     model.createdOn = now;
