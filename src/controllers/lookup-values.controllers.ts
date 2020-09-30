@@ -33,7 +33,7 @@ export class LookupValuesController extends BaseController {
         @Query('fields') fields?: string,
         @Query('expand') expand?: string,
     ): Promise<any> {
-        const result = await this.apiService.findAllByKindAsync(kind, { fields: fields.trim(), expand: expand.trim() });
+        const result = await this.apiService.findAllByKindAsync(kind, { fields: fields?.trim(), expand: expand?.trim() });
         return result;
     }
     
