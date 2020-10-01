@@ -11,16 +11,17 @@ const controller = 'LookupValues';
 @ApiTags(controller)
 export class LookupValuesController extends BaseController {
     protected beforeCreate(model: BaseDynamoModel): BaseDynamoModel {
-        model.sk = model.sk || this._table;
-        model.name = model.name || model.code;
-        return model;
+      model.pk = model.code;
+      model.sk = model.sk || this._table;
+      model.name = model.name || model.code;
+      return model;
     }
 
     protected beforeUpdate(model: BaseDynamoModel): BaseDynamoModel {
-        return this.beforeCreate(model);
+      model = this.beforeCreate(model);
+      return model;
     }
 
-    @Get('kind/:kind')
     /**
      * GET ALL RECORDS
      * @param fields 
@@ -28,8 +29,8 @@ export class LookupValuesController extends BaseController {
      */
     @UseInterceptors(ClassSerializerInterceptor)
     @Get()
-    async findAllByKind(
-        @Param('kind') kind: string,
+    async findAll(
+        @Query('kind') kind: string,
         @Query('fields') fields?: string,
         @Query('expand') expand?: string,
     ): Promise<any> {
