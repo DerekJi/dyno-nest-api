@@ -55,6 +55,7 @@ export class AppController {
    */
   @Post(':table')
   async create(@Param('table') table: string, @Body() model: BaseDynamoModel): Promise<any> {
+    model.data = model.data || table;
     const result = await this.apiService.createAsync(table, model);
     return result;
   }
@@ -68,6 +69,7 @@ export class AppController {
    */
   @Patch(':table/:id')
   async update(@Param('table') table: string, @Body() model: BaseDynamoModel): Promise<any> {
+    model.data = model.data || table;
     const result = await this.apiService.updateAsync(table, model);
     return result;
   }
