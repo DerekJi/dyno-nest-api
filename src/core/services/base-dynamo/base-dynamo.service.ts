@@ -99,6 +99,7 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
 
     model.pk = model.pk || (sk + '#' + Guid.create().toString());
     model.sk = sk;
+    (model as any).id = model.pk;
     model.data = model.name;
     model.createdOn = now;
 
