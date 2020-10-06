@@ -127,9 +127,13 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
    */
   public async updateAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toISOString();
+    model.sk = model?.sk || sk;
     model.modifiedOn = model.modifiedOn || now;
 
+    // console.log(model);
+    
     const params = this.buildUpdateItemInput(model);
+    // console.log(params);    
 
     if (!params) {
       return new InternalServerErrorException('Invalid input');

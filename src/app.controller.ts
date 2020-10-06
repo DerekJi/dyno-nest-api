@@ -55,7 +55,9 @@ export class AppController {
    */
   @Post(':table')
   async create(@Param('table') table: string, @Body() model: BaseDynamoModel): Promise<any> {
-    model.data = model.data || table;
+    model.data = model?.data || table;
+    model.name = model?.name || table;
+    model.sk = model?.sk  || table;
     const result = await this.apiService.createAsync(table, model);
     return result;
   }
@@ -68,8 +70,11 @@ export class AppController {
    * @param model The json-formatted object
    */
   @Patch(':table/:id')
-  async update(@Param('table') table: string, @Body() model: BaseDynamoModel): Promise<any> {
+  async update(@Param('table') table: string, @Param('id') id: string, @Body() model: BaseDynamoModel): Promise<any> {
     model.data = model.data || table;
+    model.name = model?.name || table;
+    model.sk = model?.sk || table;
+    model.pk = id;
     const result = await this.apiService.updateAsync(table, model);
     return result;
   }
