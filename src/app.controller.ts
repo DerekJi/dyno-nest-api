@@ -27,7 +27,7 @@ export class AppController {
     @Query('fields') fields?: string,
     @Query('expand') expand?: string,
   ): Promise<any> {
-    const result = await this.apiService.findByKeyAsync(table, id, { fields: fields.trim(), expand: expand.trim() });
+    const result = await this.apiService.findByKeyAsync(table, id, { fields: fields?.trim(), expand: expand?.trim() });
     return result;
   }  
 
@@ -43,7 +43,7 @@ export class AppController {
     @Query('fields') fields?: string,
     @Query('expand') expand?: string,
   ): Promise<any> {
-    const result = await this.apiService.findAllAsync(table, { fields: fields.trim(), expand: expand.trim() });
+    const result = await this.apiService.findAllAsync(table, { fields: fields?.trim(), expand: expand?.trim() });
     return result;
   }
   
