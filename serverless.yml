@@ -1,4 +1,4 @@
-service: simple-application-data-service-function
+service: sads-function
 
 provider:
   name: aws
