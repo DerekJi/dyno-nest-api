@@ -299,12 +299,13 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     try {
       const queryInput = this.buildExpandQueryInput(model[options.pkMapFieldName], options.skValue);
       const promise = await this.db.query(queryInput).promise();
-      result = promise.Items;
+      result = promise.Items as Array<any> || [];
     } catch (error) {
       return new InternalServerErrorException(error);
     }
 
-    return result;
+    return options?.mode === 'array' ? result : 
+            (result.length > 0 ? result[0] : null);
   }
 
   /**
