@@ -12,7 +12,7 @@ function setupSwagger(app: INestApplication) {
     .setTitle('SimpleApplicationService API')
     .setDescription('The SimpleApplicationService API description')
     .setVersion('v1')
-    .addApiKey({type: 'apiKey', name: 'Authorisation', in: 'header'}, 'Authorisation')
+    .addApiKey({type: 'apiKey', name: 'x-api-key', in: 'header'}, 'x-api-key')
     .addOAuth2({
       type: 'oauth2',
       flows: {

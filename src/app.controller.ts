@@ -1,5 +1,6 @@
-import { BaseDynamoModel } from '@core/models';
+import { BaseDynamoModel, DatabaseConfigEnv } from '@core/models';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiSecurity } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
@@ -10,7 +11,10 @@ import { AppService } from './app.service';
 @ApiSecurity('Authorisation') // NOTE: The string must be consistent to the last parameter of the line addApiKey() in main.ts
 export class AppController {
   
-  constructor(private readonly apiService: AppService) {
+  constructor(
+    private readonly apiService: AppService,
+    protected configService: ConfigService,
+  ) {
   }
 
   /**
