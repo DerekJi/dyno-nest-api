@@ -11,8 +11,6 @@ jobs:
       uses: actions/checkout@master
     
     - name: npm install
-      # You may pin to the exact commit or the version.
-      # uses: Jaid/action-npm-install@9483da054882538350947c4147de4c8adbf0d597
       uses: Jaid/action-npm-install@v1.2.4
       with:
         # NODE_ENV setting for installing execution (affects the amount of dependencies installed, but I would recommend keeping development in any case).
@@ -22,22 +20,26 @@ jobs:
         # If true and node_modules folder already exists, this action will be skipped assuming npm install is not required.
         skipIfNodeModulesExists: false # optional, default is false
     
-    - name: Serverless GithubAction Deploy
-      # You may pin to the exact commit or the version.
-      # uses: SuprGames/serverless-github-action@be200a36b5a0aac387e6102189add19380ff20fa
+    - name: Serverless Package (Generate ZIP file)
       uses: SuprGames/serverless-github-action@v1.77
       with:
         # Serverless command including arguments
         command: package
         args: -v
+        
+#      THE FOLLOWING IS TO DEPLOY DIRECTLY
+#    - name: Serverless GithubAction DEPLOY
+#      uses: SuprGames/serverless-github-action@v1.77
+#      with:
+#        # Serverless command including arguments
+#        command: deploy
+#        args: -v
 #      env:
 #        # The AWS Credentials
 #        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    - name: Update source and configuration of AWS Lambda function
-      # You may pin to the exact commit or the version.
-      # uses: mupixa/deploy-lambda@eee46e2aacaea0a2abcd785da7632859d1db09d4
+    - name: Upload the generated ZIP file to AWS Lambda function
       uses: mupixa/deploy-lambda@v0.4
       with:
         # Zip package of the complete Lambda source and dependencies.
