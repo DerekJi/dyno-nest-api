@@ -10,16 +10,17 @@ export class AppService extends BaseDynamoService<BaseDynamoModel> {
 
   protected readonly expandCandidates: IExpandOptions[] = [
     {
-      key: 'taskRecipients'.toLowerCase(),
-      pkMapFieldName: 'pk',
-      skValue: 'USER',
-      targetProperty: 'taskRecipients',
-    },
-    {
-      key: 'lga'.toLowerCase(),
-      pkMapFieldName: 'lgaKey',
-      skValue: 'LGA',
-      targetProperty: 'LocalGovernmentArea',
+      // The keyword specified in the query parameter 'expand'
+      key: 'organisation'.toLowerCase(),
+
+      // The column name which maps to the 'pk' column of the foreign key's table
+      pkMapFieldName: 'organisationId',
+      
+      // The name of the foreign key's table
+      skValue: 'Organisations',
+
+      // The property name included in the response body
+      targetProperty: 'organisation',
     }
   ];
 }

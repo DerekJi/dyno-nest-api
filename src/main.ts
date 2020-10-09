@@ -12,7 +12,7 @@ function setupSwagger(app: INestApplication) {
     .setTitle('SimpleApplicationService API')
     .setDescription('The SimpleApplicationService API description')
     .setVersion('v1')
-    .addApiKey({type: 'apiKey', name: 'Authorisation', in: 'header'}, 'Authorisation')
+    .addApiKey({type: 'apiKey', name: 'x-api-key', in: 'header'}, 'x-api-key')
     .addOAuth2({
       type: 'oauth2',
       flows: {
@@ -22,6 +22,8 @@ function setupSwagger(app: INestApplication) {
         },
       },
     })
+    .addTag('LookupKinds')
+    .addTag('LookupValues')
     .build();
     
   const document = SwaggerModule.createDocument(app, options);
@@ -29,7 +31,7 @@ function setupSwagger(app: INestApplication) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.use(compression());
  
