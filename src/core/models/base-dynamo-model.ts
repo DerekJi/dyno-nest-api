@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude } from 'class-transformer';
 
 export abstract class BaseDynamoModel {
   @ApiProperty({ required: false, example: '', description: 'The key of the record. Technically it is the pk in dynamodb and in the format of GUID' })
@@ -25,6 +26,11 @@ export abstract class BaseDynamoModel {
   // @ApiProperty({ required: false, example: '', description: 'The user who modified the record' })
   modifiedBy?: string;
 
+  @Exclude()
   abstract data?: string;
   [key: string]: any;
+
+  constructor(partial: Partial<BaseDynamoModel>) {
+    Object.assign(this, partial);
+  }
 }

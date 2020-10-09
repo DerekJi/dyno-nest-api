@@ -1,4 +1,5 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
@@ -10,19 +11,22 @@ export class AuthMiddleware implements NestMiddleware {
 
   protected readonly allowedOriginalUrls: string[] = [
     'USER',
-    'TASK'
+    'TASK',
+    'LookupValues',
+    'LookupKinds',
   ];
 
   use(req: Request, res: Response, next: NextFunction) {
-    
-    // const originalUrl = req.originalUrl.replace(/\?.*$/g, '');
-    // const apiKey: string = req.headers['x-api-key'] as string;
-
-    // if (!this.validateApiKey(apiKey)) {
-    //   throw new UnauthorizedException(`Authentication failed: incorrect api-key`);
-    // } else if (!this.validateOriginalUrl(originalUrl)) {
-    //   throw new UnauthorizedException(`Authentication failed: invalid request`);
-    // }
+    if (this.authConfigs) {
+      const originalUrl = req.originalUrl.replace(/\?.*$/g, '');
+      const apiKey: string = req.headers['x-api-key'] as string;
+  
+      if (!this.validateApiKey(apiKey)) {
+        throw new UnauthorizedException(`Authentication failed: incorrect api-key`);
+      } else if (!this.validateOriginalUrl(originalUrl)) {
+        throw new UnauthorizedException(`Authentication failed: invalid request`);
+      }
+    }
 
     next();
   }
@@ -33,11 +37,15 @@ export class AuthMiddleware implements NestMiddleware {
    * @param originalUrl The original url of the request
    */
   protected validateOriginalUrl(originalUrl: string): boolean {
-    const valid = (originalUrl && 
-      this.allowedOriginalUrls.some(url => originalUrl.toLowerCase().endsWith(url.toLowerCase()))
-    );
-    
-    return valid;
+    if (this.authConfigs?.urlAuthEnabled === true) {
+      const valid = (originalUrl && 
+        this.allowedOriginalUrls.some(url => originalUrl.toLowerCase().endsWith(url.toLowerCase()))
+      );
+      
+      return valid;
+    }
+
+    return true;
   }
 
   /**
@@ -46,9 +54,20 @@ export class AuthMiddleware implements NestMiddleware {
    * @param reqApiKey api-key from the request header
    */
   protected validateApiKey(reqApiKey: string): boolean {
-    if (reqApiKey) {
-      return this.allowedApiKeys.some(key => reqApiKey === key);
+    if (this.authConfigs?.apiKeyAuthEnabled === true) {
+      if (reqApiKey) {
+        return this.allowedApiKeys.some(key => reqApiKey === key);
+      }
+      return false;
     }
-    return false;
+    return true;
+  }
+
+  protected readonly authConfigs: any;
+
+  constructor(
+    protected configService: ConfigService
+  ) {
+    this.authConfigs = this.configService.get('auth');
   }
 }

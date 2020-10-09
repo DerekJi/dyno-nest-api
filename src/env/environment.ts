@@ -2,6 +2,10 @@ const isDevelopment = process.env.ENVIRONMENT?.toLowerCase().indexOf('lambda') >
 
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
+  auth: {
+    urlAuthEnabled: false,
+    apiKeyAuthEnabled: false,
+  },
   database: {
     isDevelopment,
     host: process.env.DATABASE_HOST || 'localhost',

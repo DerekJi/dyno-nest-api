@@ -7,12 +7,8 @@ class TestBaseDynamoService extends BaseDynamoService<BaseDynamoModel> {
   protected serviceSortKey = 'TEST';
   protected get db() { return new DynamoDB.DocumentClient(this.dynamoOptions); }
 
-  protected applyExpandParameters(items: Array<BaseDynamoModel>, expands?: Array<string>): Array<BaseDynamoModel> {
-    if ((expands || []).length > 0) {
-      
-    }
-    return items;
-  }
+  expandCandidates = [];
+
 }
 
 describe('BaseDynamoService', () => {

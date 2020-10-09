@@ -97,8 +97,9 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   public async createAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toISOString();
 
-    model.pk = sk + '#' + Guid.create().toString();
+    model.pk = model.pk || (sk + '#' + Guid.create().toString());
     model.sk = sk;
+    (model as any).id = model.pk;
     model.data = model.name;
     model.createdOn = now;
 
@@ -126,9 +127,13 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
    */
   public async updateAsync(sk: string, model: T): Promise<T | InternalServerErrorException | NotFoundException> {
     const now = new Date().toISOString();
+    model.sk = model?.sk || sk;
     model.modifiedOn = model.modifiedOn || now;
 
+    // console.log(model);
+    
     const params = this.buildUpdateItemInput(model);
+    // console.log(params);    
 
     if (!params) {
       return new InternalServerErrorException('Invalid input');
@@ -294,12 +299,13 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
     try {
       const queryInput = this.buildExpandQueryInput(model[options.pkMapFieldName], options.skValue);
       const promise = await this.db.query(queryInput).promise();
-      result = promise.Items;
+      result = promise.Items as Array<any> || [];
     } catch (error) {
       return new InternalServerErrorException(error);
     }
 
-    return result;
+    return options?.mode === 'array' ? result : 
+            (result.length > 0 ? result[0] : null);
   }
 
   /**
