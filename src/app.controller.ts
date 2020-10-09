@@ -1,5 +1,6 @@
-import { BaseDynamoModel } from '@core/models';
+import { BaseDynamoModel, DatabaseConfigEnv } from '@core/models';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiSecurity } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
@@ -7,12 +8,10 @@ import { AppService } from './app.service';
 @ApiSecurity('x-api-key') // NOTE: The string must be consistent to the last parameter of the line addApiKey() in main.ts
 export class AppController {
   
-  constructor(private readonly apiService: AppService) {
-  }
-
-  @Get('hello')
-  async hello() {
-    return 'hello';
+  constructor(
+    private readonly apiService: AppService,
+    protected configService: ConfigService,
+  ) {
   }
 
   /**
@@ -29,8 +28,12 @@ export class AppController {
     @Query('fields') fields?: string,
     @Query('expand') expand?: string,
   ): Promise<any> {
-    const result = await this.apiService.findByKeyAsync(sk, key, { fields: fields.trim(), expand: expand.trim() });
-    return result;
+    try {
+      const result = await this.apiService.findByKeyAsync(sk, key, { fields: fields.trim(), expand: expand.trim() });
+      return result;
+    } catch (err) {
+      return err;
+    }
   }
 
   /**
