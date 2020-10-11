@@ -15,5 +15,6 @@
       "@core/*": ["src/core/*"],
     },
     "incremental": true
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }
