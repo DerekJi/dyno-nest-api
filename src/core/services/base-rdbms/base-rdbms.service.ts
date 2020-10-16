@@ -19,12 +19,12 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
    * @param expand 
    */
   public async findByKeyAsync(tableName: string, id: number, options?: IFindOptions): Promise<T | InternalServerErrorException | NotFoundException> {
-
-    await this.db.connect();
+    const db = this.getDb();
+    await db.connect();
 
     let result;
     try {
-      result = await this.db.query(
+      result = await db.query(
         `SELECT * FROM ${tableName} WHERE id = ${id}`
       );
     } catch (error) {
@@ -35,7 +35,7 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
         return new NotFoundException('Not Found');
       }
 
-      await this.db.end();
+      await db.end();
       return result;
     }
   }
@@ -45,12 +45,13 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
    * @param options extra optional conditions
    */
   public async findAllAsync(tableName: string, options?: IFindOptions): Promise<T[] | InternalServerErrorException | NotFoundException> {
-    await this.db.connect();
+    const db = this.getDb();
+    await db.connect();
 
     let result = [];
     try {
       const query = `SELECT * FROM ${tableName}`;
-      const resultIterator = await this.db.query(query);
+      const resultIterator = await db.query(query);
       for await (const row of resultIterator ) {
         const rowItem = this.convertToObject(row);
         result.push(rowItem);
@@ -65,7 +66,7 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
         return new NotFoundException('Not Found');
       }
 
-      await this.db.end();
+      await db.end();
 
       return result;
     }
@@ -92,7 +93,7 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
 
     let result;
     // try {
-    //   await this.db.put(params).promise();
+    //   await db.put(params).promise();
     //   result = Object.assign({}, model);
     // } catch (error) {
     //   return new InternalServerErrorException(error);
@@ -123,7 +124,7 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
 
     let result;
     // try {
-    //   const promise = await this.db.update(params).promise();
+    //   const promise = await db.update(params).promise();
     //   result = promise;
     // } catch (error) {
     //   return new InternalServerErrorException(error);
@@ -169,7 +170,7 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
 
     let result;
     // try {
-    //   await this.db.delete(params).promise();
+    //   await db.delete(params).promise();
     // } catch (error) {
     //   return new InternalServerErrorException(error);
     // }
@@ -280,7 +281,7 @@ export class BaseRdbmsService<T extends BaseRdbmsModel> {
     let result;
     // try {
     //   const queryInput = this.buildExpandQueryInput(model[options.pkMapFieldName], options.skValue);
-    //   const promise = await this.db.query(queryInput).promise();
+    //   const promise = await db.query(queryInput).promise();
     //   result = promise.Items as Array<any> || [];
     // } catch (error) {
     //   return new InternalServerErrorException(error);
@@ -341,7 +342,9 @@ private convertToObject(row: ResultRow<any>): object {
   /**
    * 
    */
-  protected db: PostgresClient = new PostgresClient(this.DbConfig as any);
+  protected getDb(): PostgresClient {
+    return new PostgresClient(this.DbConfig as any);
+  }
 
   /**
    * 
