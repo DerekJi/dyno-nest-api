@@ -1,4 +1,4 @@
-export interface DatabaseConfigEnv {
+export interface DynamoConfigEnv {
   host?: string;
   port?: string;
   region?: string;

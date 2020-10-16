@@ -24,6 +24,7 @@ function setupSwagger(app: INestApplication) {
     })
     .addTag('LookupKinds')
     .addTag('LookupValues')
+    .addTag('Postgres')
     .build();
     
   const document = SwaggerModule.createDocument(app, options);
