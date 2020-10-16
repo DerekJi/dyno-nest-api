@@ -5,7 +5,7 @@ import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
 import { Guid } from "guid-typescript";
 import DynamoDB from 'aws-sdk/clients/dynamodb';
 
-import { BaseDynamoModel, DatabaseConfigEnv, IFindOptions } from '@core/models';
+import { BaseDynamoModel, DynamoConfigEnv, IFindOptions } from '@core/models';
 import { IExpandOptions } from '@core/models/expand-options.interface';
 
 @Injectable()
@@ -322,8 +322,8 @@ export abstract class BaseDynamoService<T extends BaseDynamoModel> {
   /**
    * 
    */
-  protected get DbConfig(): DatabaseConfigEnv {
-    const dbConfig = this.configService.get<DatabaseConfigEnv>('database');
+  protected get DbConfig(): DynamoConfigEnv {
+    const dbConfig = this.configService.get<DynamoConfigEnv>('database');
     return dbConfig;
   }
 

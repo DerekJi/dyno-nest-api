@@ -1,4 +1,4 @@
-import { BaseDynamoModel, DatabaseConfigEnv } from '@core/models';
+import { BaseDynamoModel } from '@core/models';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiSecurity } from '@nestjs/swagger';
