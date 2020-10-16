@@ -26,6 +26,6 @@ export class LookupValuesService extends AppService {
    */
   public async findAllByKindAsync(kind: string, options?: IFindOptions): Promise<BaseDynamoModel[] | InternalServerErrorException | NotFoundException> {
     const all = await this.findAllAsync(this.table, options);
-    return (all as BaseDynamoModel[] || []).filter(x => x.kind === kind);
+    return (all as BaseDynamoModel[] || []).filter(x => kind ? x.kind === kind : true);
   }
 }
